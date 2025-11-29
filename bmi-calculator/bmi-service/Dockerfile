@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine AS builder
+FROM --platform=linux/amd64 golang:1.21-alpine AS builder
 
 WORKDIR /app
 
@@ -7,9 +7,9 @@ RUN go mod download
 
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bmi-service ./bmi-service
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -installsuffix cgo -o bmi-service ./bmi-service
 
-FROM alpine:latest
+FROM --platform=linux/amd64 alpine:latest
 
 RUN apk --no-cache add ca-certificates
 
