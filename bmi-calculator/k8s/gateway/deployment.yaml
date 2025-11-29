@@ -14,6 +14,8 @@ spec:
       labels:
         app: gateway
     spec:
+      nodeSelector:
+        karpenter.sh/nodepool: default
       containers:
       - name: gateway
         image: devlopesbernardo/bmi-calculator-gateway:latest
@@ -52,4 +54,4 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 8080
-  type: LoadBalancer
+  type: ClusterIP

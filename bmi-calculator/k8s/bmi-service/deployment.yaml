@@ -14,6 +14,8 @@ spec:
       labels:
         app: bmi-service
     spec:
+      nodeSelector:
+        karpenter.sh/nodepool: default
       containers:
       - name: bmi-service
         image: devlopesbernardo/bmi-calculator-bmi-service:latest
