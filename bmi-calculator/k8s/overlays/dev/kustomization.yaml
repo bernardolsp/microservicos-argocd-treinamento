@@ -5,4 +5,4 @@ namespace: bmi-calculator
 
 resources:
   - ../../base
-  - ingress.yaml
+#  - ingress.yaml
