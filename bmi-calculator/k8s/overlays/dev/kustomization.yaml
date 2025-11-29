@@ -4,8 +4,8 @@ kind: Kustomization
 namespace: bmi-calculator
 
 resources:
-  - ../../gateway
-  - ../../bmi-service
-  - ../../health-service
-  - ../../shared
+  - ../../gateway/deployment.yaml
+  - ../../bmi-service/deployment.yaml
+  - ../../health-service/deployment.yaml
+  - ../../shared/namespace.yaml
   - ingress.yaml
