@@ -12,7 +12,7 @@ metadata:
 spec:
   ingressClassName: alb
   rules:
-    - host: bmi-dev-3.bernardolopes.com
+    - host: bmi-dev-14.bernardolopes.com
       http:
         paths:
           - path: /
