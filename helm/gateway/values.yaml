@@ -1,0 +1,36 @@
+replicaCount: 2
+
+image:
+  repository: devlopesbernardo/bmi-calculator-gateway
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8080
+
+env:
+  PORT: "8080"
+  BMI_SERVICE_URL: "http://bmi-service:8081"
+  HEALTH_SERVICE_URL: "http://health-service:8082"
+  IMAGE_VERSION: "latest"
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 30
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 5
+
+nodeSelector:
+  karpenter.sh/nodepool: default
+
+resources: {}
