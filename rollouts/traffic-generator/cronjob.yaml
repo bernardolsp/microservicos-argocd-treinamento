@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: traffic-generator-periodic
+  labels:
+    app: traffic-generator
+    type: periodic
+spec:
+  schedule: "*/15 * * * *"  # Run every 15 minutes
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: k6
+            image: grafana/k6:latest
+            command: ["k6", "run"]
+            args:
+            - "--env"
+            - "BASE_URL=http://demo-app-canary-metrics:80"
+            - "--env"
+            - "RPS=20"
+            - "/scripts/constant-load.js"
+            volumeMounts:
+            - name: scripts
+              mountPath: /scripts
+            resources:
+              requests:
+                memory: "128Mi"
+                cpu: "100m"
+              limits:
+                memory: "256Mi"
+                cpu: "200m"
+          volumes:
+          - name: scripts
+            configMap:
+              name: k6-scripts
+          restartPolicy: Never
+      backoffLimit: 2

@@ -1,0 +1,100 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: demo-app-canary
+  labels:
+    app: demo-app-canary
+spec:
+  replicas: 10
+  revisionHistoryLimit: 5
+  
+  selector:
+    matchLabels:
+      app: demo-app-canary
+  
+  template:
+    metadata:
+      labels:
+        app: demo-app-canary
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: demo-app
+        # Change this image tag to test different versions:
+        # v1.0 = normal (works well)
+        # v2.0 = error-prone (50% errors) - analysis should catch this
+        # v3.0 = slow (high latency) - analysis should catch this
+        image: demo-app:v1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        
+        env:
+        - name: VERSION
+          value: "1.0"
+        - name: BEHAVIOR
+          value: "normal"
+        - name: PORT
+          value: "8080"
+  
+  strategy:
+    canary:
+      maxSurge: "25%"
+      maxUnavailable: 0
+      
+      steps:
+      # Step 1: 10% traffic
+      - setWeight: 10
+      - pause:
+          duration: 5m
+      
+      # Step 2: 25% traffic
+      - setWeight: 25
+      - pause:
+          duration: 5m
+      
+      # Step 3: 50% traffic
+      - setWeight: 50
+      - pause:
+          duration: 5m
+      
+      # Step 4: 75% traffic
+      - setWeight: 75
+      - pause:
+          duration: 5m
+      
+      # Step 5: 100% traffic (automatic)
+      
+      canaryService: demo-app-canary-canary
+      stableService: demo-app-canary-stable
