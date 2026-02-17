@@ -1,20 +1,17 @@
 # Overlay para ambiente DEV
 # 
 # Este overlay configura o ambiente de desenvolvimento.
-# O Kargo atualiza a imagem neste diretório quando promove Freight.
+# O Kargo atualiza a imagem neste diretorio quando promove Freight.
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Referência à base
 resources:
   - namespace.yaml
   - ../../base
 
-# Namespace para dev
 namespace: demo-app-dev
 
-# Patches específicos do ambiente dev
 patches:
   - target:
       kind: Deployment
@@ -26,8 +23,16 @@ patches:
       - op: replace
         path: /spec/template/spec/containers/0/resources/limits/memory
         value: "64Mi"
+  
+  # Patch para alterar o hostname do ingress para dev
+  - target:
+      kind: Ingress
+      name: demo-app
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: demo-app-dev.argocd.local
 
-# Annotations para identificação
 commonAnnotations:
   environment: dev
   managed-by: kargo

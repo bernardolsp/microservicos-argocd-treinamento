@@ -1,12 +1,13 @@
 # Overlay para ambiente PROD
 #
-# Este overlay configura o ambiente de produção.
-# O Kargo promove para cá após o Freight passar por staging.
+# Este overlay configura o ambiente de producao.
+# O Kargo promove para ca apos o Freight passar por staging.
 
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
+  - namespace.yaml
   - ../../base
 
 namespace: demo-app-prod
@@ -22,6 +23,15 @@ patches:
       - op: replace
         path: /spec/template/spec/containers/0/resources/limits/cpu
         value: "500m"
+  
+  # Patch para alterar o hostname do ingress para prod
+  - target:
+      kind: Ingress
+      name: demo-app
+    patch: |
+      - op: replace
+        path: /spec/rules/0/host
+        value: demo-app.argocd.local
 
 commonAnnotations:
   environment: prod
