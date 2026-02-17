@@ -61,8 +61,6 @@ spec:
           failureThreshold: 3
         
         env:
-        - name: BEHAVIOR
-          value: "normal"
         - name: PORT
           value: "8080"
   
