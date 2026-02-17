@@ -4,6 +4,8 @@ kind: Kustomization
 namespace: default
 
 resources:
+  - services.yaml
+  - servicemonitors.yaml
   - rollout.yaml
   - rollout-with-metrics.yaml
 

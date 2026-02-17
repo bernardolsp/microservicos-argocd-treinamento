@@ -1,25 +1,6 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: demo-app-blue-green
-  labels:
-    release: prometheus
-spec:
-  selector:
-    matchLabels:
-      app: demo-app-blue-green
-  endpoints:
-  - port: metrics
-    interval: 15s
-    scrapeTimeout: 10s
-    path: /metrics
-  namespaceSelector:
-    matchNames:
-    - default
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
   name: demo-app-canary
   labels:
     release: prometheus
