@@ -71,7 +71,7 @@ spec:
       
       steps:
       # Step 1: 10% traffic with analysis
-      - setWeight: 10
+      - setWeight: 1
       - analysis:
           templates:
           - templateName: composite-health-check
@@ -90,7 +90,7 @@ spec:
             value: "0.5"
       
       # Step 2: 25% traffic with analysis
-      - setWeight: 25
+      - setWeight: 15
       - analysis:
           templates:
           - templateName: composite-health-check
@@ -105,7 +105,7 @@ spec:
             value: "0.5"
       
       # Step 3: 50% traffic with analysis
-      - setWeight: 50
+      - setWeight: 45
       - analysis:
           templates:
           - templateName: composite-health-check
@@ -120,6 +120,20 @@ spec:
             value: "0.5"
       
       # Step 4: 75% traffic with stricter analysis
+      - setWeight: 50
+      - analysis:
+          templates:
+          - templateName: composite-health-check
+          args:
+          - name: service-name
+            value: demo-app-canary-metrics
+          - name: success-threshold
+            value: "98"
+          - name: error-threshold
+            value: "2"
+          - name: p95-threshold
+            value: "0.3"
+
       - setWeight: 75
       - analysis:
           templates:
@@ -133,6 +147,5 @@ spec:
             value: "2"
           - name: p95-threshold
             value: "0.3"
-      
       canaryService: demo-app-canary-metrics-canary
       stableService: demo-app-canary-metrics-stable
