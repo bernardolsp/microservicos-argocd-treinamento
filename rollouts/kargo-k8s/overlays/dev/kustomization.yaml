@@ -1,0 +1,32 @@
+# Overlay para ambiente DEV
+# 
+# Este overlay configura o ambiente de desenvolvimento.
+# O Kargo atualiza a imagem neste diretório quando promove Freight.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Referência à base
+resources:
+  - ../../base
+
+# Namespace para dev
+namespace: demo-app-dev
+
+# Patches específicos do ambiente dev
+patches:
+  - target:
+      kind: Deployment
+      name: demo-app
+    patch: |
+      - op: replace
+        path: /spec/replicas
+        value: 1
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/memory
+        value: "64Mi"
+
+# Annotations para identificação
+commonAnnotations:
+  environment: dev
+  managed-by: kargo

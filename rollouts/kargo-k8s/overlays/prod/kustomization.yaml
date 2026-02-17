@@ -1,0 +1,28 @@
+# Overlay para ambiente PROD
+#
+# Este overlay configura o ambiente de produção.
+# O Kargo promove para cá após o Freight passar por staging.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+namespace: demo-app-prod
+
+patches:
+  - target:
+      kind: Deployment
+      name: demo-app
+    patch: |
+      - op: replace
+        path: /spec/replicas
+        value: 5
+      - op: replace
+        path: /spec/template/spec/containers/0/resources/limits/cpu
+        value: "500m"
+
+commonAnnotations:
+  environment: prod
+  managed-by: kargo
