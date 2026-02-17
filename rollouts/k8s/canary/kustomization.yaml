@@ -6,5 +6,6 @@ namespace: default
 resources:
   - services.yaml
   - servicemonitors.yaml
+  - ingress.yaml
   - rollout.yaml
   - rollout-with-metrics.yaml
