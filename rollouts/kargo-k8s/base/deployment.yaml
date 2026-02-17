@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: demo-app
-        image: devlopesbernardo/version-app:v1
+        image: docker.io/devlopesbernardo/version-app:v1
         imagePullPolicy: Always
         ports:
         - name: http
