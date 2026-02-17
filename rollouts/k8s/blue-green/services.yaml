@@ -18,7 +18,6 @@ spec:
     name: metrics
   selector:
     app: demo-app-blue-green
-    project: demo-apps
 ---
 apiVersion: v1
 kind: Service
@@ -40,4 +39,3 @@ spec:
     name: metrics
   selector:
     app: demo-app-blue-green
-    project: demo-apps

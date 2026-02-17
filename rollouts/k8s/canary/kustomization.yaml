@@ -8,6 +8,3 @@ resources:
   - servicemonitors.yaml
   - rollout.yaml
   - rollout-with-metrics.yaml
-
-commonLabels:
-  project: demo-apps

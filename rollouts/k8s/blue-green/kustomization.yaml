@@ -7,6 +7,3 @@ resources:
   - services.yaml
   - servicemonitors.yaml
   - rollout.yaml
-
-commonLabels:
-  project: demo-apps
