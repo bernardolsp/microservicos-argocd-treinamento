@@ -159,9 +159,9 @@ build_images() {
     
     # Build specific versions if requested
     if [[ "$BUILD_ALL" == true ]]; then
-        build_version "v1 (normal)" "$SCRIPT_DIR/app-src/v1/Dockerfile" "${TAG}-v1"
-        build_version "v2 (error-prone)" "$SCRIPT_DIR/app-src/v2/Dockerfile" "${TAG}-v2"
-        build_version "v3 (slow)" "$SCRIPT_DIR/app-src/v3/Dockerfile" "${TAG}-v3"
+        build_version "v1 (normal)" "$SCRIPT_DIR/app-src/v1/Dockerfile" "v1"
+        build_version "v2 (error-prone)" "$SCRIPT_DIR/app-src/v2/Dockerfile" "v2"
+        build_version "v3 (slow)" "$SCRIPT_DIR/app-src/v3/Dockerfile" "v3"
     fi
 }
 
