@@ -225,7 +225,7 @@ func applyBehavior(w http.ResponseWriter, r *http.Request) int {
 func getMessage() string {
 	messages := map[string][]string{
 		"normal": {
-			"Service operating normally",
+			"Service operating normally!!",
 			"All systems functional",
 			"Request processed successfully",
 		},
