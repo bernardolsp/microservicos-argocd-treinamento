@@ -7,7 +7,7 @@ const errorRate = new Rate('errors');
 const responseTime = new Trend('response_time');
 
 // Configuration - adjust these for your environment
-const BASE_URL = __ENV.BASE_URL || 'http://localhost:8080';
+const BASE_URL = __ENV.BASE_URL || 'http://canary.argocd.local:8080';
 const RPS = parseInt(__ENV.RPS || '10');
 
 export const options = {
