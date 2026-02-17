@@ -8,7 +8,7 @@ const responseTime = new Trend('response_time');
 const requests = new Counter('requests');
 
 // Configuration
-const BASE_URL = __ENV.BASE_URL || 'http://canary.argocd.local:8080/';
+const BASE_URL = __ENV.BASE_URL || 'http://canary-metrics.argocd.local:8080/';
 const TARGET_SERVICE = __ENV.TARGET_SERVICE || 'demo-app';
 
 export const options = {
