@@ -17,7 +17,6 @@ spec:
     name: metrics
   selector:
     app: demo-app-canary
-    project: demo-apps
 ---
 apiVersion: v1
 kind: Service
@@ -35,7 +34,6 @@ spec:
     name: http
   selector:
     app: demo-app-canary
-    project: demo-apps
 ---
 apiVersion: v1
 kind: Service
@@ -53,7 +51,6 @@ spec:
     name: http
   selector:
     app: demo-app-canary
-    project: demo-apps
 ---
 apiVersion: v1
 kind: Service
@@ -74,7 +71,6 @@ spec:
     name: metrics
   selector:
     app: demo-app-canary-metrics
-    project: demo-apps
 ---
 apiVersion: v1
 kind: Service
@@ -92,7 +88,6 @@ spec:
     name: http
   selector:
     app: demo-app-canary-metrics
-    project: demo-apps
 ---
 apiVersion: v1
 kind: Service
@@ -110,4 +105,3 @@ spec:
     name: http
   selector:
     app: demo-app-canary-metrics
-    project: demo-apps
