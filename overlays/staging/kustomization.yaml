@@ -1,0 +1,33 @@
+# Overlay para ambiente STAGING
+#
+# Este overlay configura o ambiente de staging.
+# O Kargo promove para ca apos o Freight passar por dev.
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- namespace.yaml
+- ../../base
+namespace: demo-app-staging
+patches:
+- target:
+    kind: Deployment
+    name: demo-app
+  patch: |
+    - op: replace
+      path: /spec/replicas
+      value: 2
+# Patch para alterar o hostname do ingress para staging
+- target:
+    kind: Ingress
+    name: demo-app
+  patch: |
+    - op: replace
+      path: /spec/rules/0/host
+      value: demo-app-staging.argocd.local
+commonAnnotations:
+  environment: staging
+  managed-by: kargo
+images:
+- name: docker.io/devlopesbernardo/version-app
+  newTag: 1.2.4

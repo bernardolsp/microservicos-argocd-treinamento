@@ -1,0 +1,16 @@
+# Kustomization base
+# Recursos compartilhados entre todos os ambientes
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+
+commonLabels:
+  app: demo-app
+
+# Namespace padrão (será sobrescrito pelos overlays)
+namespace: default
