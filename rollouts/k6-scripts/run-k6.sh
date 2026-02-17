@@ -7,7 +7,7 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TEST_TYPE=${1:-load}
-BASE_URL=${2:-http://canary.argocd.local:8080}
+BASE_URL=${2:-http://canary.argocd.local:8080/}
 
 echo "Running k6 test: $TEST_TYPE"
 echo "Target URL: $BASE_URL"

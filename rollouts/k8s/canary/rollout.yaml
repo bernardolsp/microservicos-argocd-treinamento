@@ -27,7 +27,7 @@ spec:
         # v1.0 = normal (works well)
         # v2.0 = error-prone (50% errors) - analysis should catch this
         # v3.0 = slow (high latency) - analysis should catch this
-        image: devlopesbernardo/version-app:v1
+        image: devlopesbernardo/version-app:v2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
