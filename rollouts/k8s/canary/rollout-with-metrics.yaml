@@ -1,142 +1,138 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Rollout
-# metadata:
-#   name: demo-app-canary-metrics
-#   labels:
-#     app: demo-app-canary-metrics
-# spec:
-#   replicas: 10
-#   revisionHistoryLimit: 5
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: demo-app-canary-metrics
+  labels:
+    app: demo-app-canary-metrics
+spec:
+  replicas: 10
+  revisionHistoryLimit: 5
   
-#   selector:
-#     matchLabels:
-#       app: demo-app-canary-metrics
+  selector:
+    matchLabels:
+      app: demo-app-canary-metrics
   
-#   template:
-#     metadata:
-#       labels:
-#         app: demo-app-canary-metrics
-#       annotations:
-#         prometheus.io/scrape: "true"
-#         prometheus.io/port: "8080"
-#         prometheus.io/path: "/metrics"
-#     spec:
-#       containers:
-#       - name: demo-app
-#         # Change this image tag to test different versions:
-#         # v1.0 = normal (works well) - should pass all analysis
-#         # v2.0 = error-prone (50% errors) - should fail analysis and abort
-#         # v3.0 = slow (high latency) - should fail latency analysis and abort
-#         image: devlopesbernardo/version-app:local
-#         imagePullPolicy: IfNotPresent
-#         ports:
-#         - containerPort: 8080
-#           name: http
-#           protocol: TCP
+  template:
+    metadata:
+      labels:
+        app: demo-app-canary-metrics
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8080"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - name: demo-app
+        # Change this image tag to test different versions:
+        # v1.0 = normal (works well) - should pass all analysis
+        # v2.0 = error-prone (50% errors) - should fail analysis and abort
+        # v3.0 = slow (high latency) - should fail latency analysis and abort
+        image: devlopesbernardo/version-app:v1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
         
-#         resources:
-#           requests:
-#             memory: "64Mi"
-#             cpu: "50m"
-#           limits:
-#             memory: "128Mi"
-#             cpu: "100m"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
         
-#         livenessProbe:
-#           httpGet:
-#             path: /health
-#             port: 8080
-#           initialDelaySeconds: 5
-#           periodSeconds: 10
-#           timeoutSeconds: 5
-#           failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
         
-#         readinessProbe:
-#           httpGet:
-#             path: /health
-#             port: 8080
-#           initialDelaySeconds: 3
-#           periodSeconds: 5
-#           timeoutSeconds: 3
-#           failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDelaySeconds: 3
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
         
-#         env:
-#         - name: VERSION
-#           value: "1.0"
-#         - name: BEHAVIOR
-#           value: "normal"
-#         - name: PORT
-#           value: "8080"
+        env:
+        - name: PORT
+          value: "8080"
   
-#   strategy:
-#     canary:
-#       maxSurge: "25%"
-#       maxUnavailable: 0
+  strategy:
+    canary:
+      maxSurge: "25%"
+      maxUnavailable: 0
       
-#       steps:
-#       # Step 1: 10% traffic with analysis
-#       - setWeight: 10
-#       - analysis:
-#           templates:
-#           - templateName: composite-health-check
-#           args:
-#           - name: service-name
-#             value: demo-app-canary-metrics
-#           - name: namespace
-#             valueFrom:
-#               fieldRef:
-#                 fieldPath: metadata.namespace
-#           - name: success-threshold
-#             value: "95"
-#           - name: error-threshold
-#             value: "5"
-#           - name: p95-threshold
-#             value: "0.5"
+      steps:
+      # Step 1: 10% traffic with analysis
+      - setWeight: 10
+      - analysis:
+          templates:
+          - templateName: composite-health-check
+          args:
+          - name: service-name
+            value: demo-app-canary-metrics
+          - name: namespace
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: success-threshold
+            value: "95"
+          - name: error-threshold
+            value: "5"
+          - name: p95-threshold
+            value: "0.5"
       
-#       # Step 2: 25% traffic with analysis
-#       - setWeight: 25
-#       - analysis:
-#           templates:
-#           - templateName: composite-health-check
-#           args:
-#           - name: service-name
-#             value: demo-app-canary-metrics
-#           - name: success-threshold
-#             value: "95"
-#           - name: error-threshold
-#             value: "5"
-#           - name: p95-threshold
-#             value: "0.5"
+      # Step 2: 25% traffic with analysis
+      - setWeight: 25
+      - analysis:
+          templates:
+          - templateName: composite-health-check
+          args:
+          - name: service-name
+            value: demo-app-canary-metrics
+          - name: success-threshold
+            value: "95"
+          - name: error-threshold
+            value: "5"
+          - name: p95-threshold
+            value: "0.5"
       
-#       # Step 3: 50% traffic with analysis
-#       - setWeight: 50
-#       - analysis:
-#           templates:
-#           - templateName: composite-health-check
-#           args:
-#           - name: service-name
-#             value: demo-app-canary-metrics
-#           - name: success-threshold
-#             value: "95"
-#           - name: error-threshold
-#             value: "5"
-#           - name: p95-threshold
-#             value: "0.5"
+      # Step 3: 50% traffic with analysis
+      - setWeight: 50
+      - analysis:
+          templates:
+          - templateName: composite-health-check
+          args:
+          - name: service-name
+            value: demo-app-canary-metrics
+          - name: success-threshold
+            value: "95"
+          - name: error-threshold
+            value: "5"
+          - name: p95-threshold
+            value: "0.5"
       
-#       # Step 4: 75% traffic with stricter analysis
-#       - setWeight: 75
-#       - analysis:
-#           templates:
-#           - templateName: composite-health-check
-#           args:
-#           - name: service-name
-#             value: demo-app-canary-metrics
-#           - name: success-threshold
-#             value: "98"
-#           - name: error-threshold
-#             value: "2"
-#           - name: p95-threshold
-#             value: "0.3"
+      # Step 4: 75% traffic with stricter analysis
+      - setWeight: 75
+      - analysis:
+          templates:
+          - templateName: composite-health-check
+          args:
+          - name: service-name
+            value: demo-app-canary-metrics
+          - name: success-threshold
+            value: "98"
+          - name: error-threshold
+            value: "2"
+          - name: p95-threshold
+            value: "0.3"
       
-#       canaryService: demo-app-canary-metrics-canary
-#       stableService: demo-app-canary-metrics-stable
+      canaryService: demo-app-canary-metrics-canary
+      stableService: demo-app-canary-metrics-stable

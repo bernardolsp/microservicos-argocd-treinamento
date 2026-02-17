@@ -7,5 +7,6 @@ resources:
   - services.yaml
   - servicemonitors.yaml
   - ingress.yaml
+  - analysis-template.yaml
   - rollout.yaml
   - rollout-with-metrics.yaml

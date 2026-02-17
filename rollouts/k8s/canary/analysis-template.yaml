@@ -1,0 +1,55 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AnalysisTemplate
+metadata:
+  name: composite-health-check
+spec:
+  args:
+  - name: service-name
+  - name: namespace
+    value: default
+  - name: success-threshold
+    value: "95"
+  - name: error-threshold
+    value: "5"
+  - name: p95-threshold
+    value: "0.5"
+  metrics:
+  - name: success-rate
+    interval: 1m
+    count: 5
+    successCondition: result[0] >= {{args.success-threshold}}
+    provider:
+      prometheus:
+        address: http://prometheus-prometheus.monitoring:9090
+        query: |
+          (
+            sum(rate(http_requests_total{service="{{args.service-name}}",status=~"2.."}[1m]))
+            /
+            sum(rate(http_requests_total{service="{{args.service-name}}"}[1m]))
+          ) * 100
+  
+  - name: error-rate
+    interval: 1m
+    count: 5
+    successCondition: result[0] <= {{args.error-threshold}}
+    provider:
+      prometheus:
+        address: http://prometheus-prometheus.monitoring:9090
+        query: |
+          (
+            sum(rate(http_requests_total{service="{{args.service-name}}",status!="200"}[1m]))
+            /
+            sum(rate(http_requests_total{service="{{args.service-name}}"}[1m]))
+          ) * 100
+  
+  - name: latency-p95
+    interval: 1m
+    count: 5
+    successCondition: result[0] <= {{args.p95-threshold}}
+    provider:
+      prometheus:
+        address: http://prometheus-prometheus.monitoring:9090
+        query: |
+          histogram_quantile(0.95,
+            sum(rate(http_request_duration_seconds_bucket{service="{{args.service-name}}"}[1m])) by (le)
+          )
