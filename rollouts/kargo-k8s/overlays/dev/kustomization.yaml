@@ -8,6 +8,7 @@ kind: Kustomization
 
 # Referência à base
 resources:
+  - namespace.yaml
   - ../../base
 
 # Namespace para dev
