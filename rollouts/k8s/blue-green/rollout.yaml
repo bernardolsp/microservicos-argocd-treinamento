@@ -61,8 +61,6 @@ spec:
           failureThreshold: 3
         
         env:
-        - name: VERSION
-          value: "1.0"
         - name: BEHAVIOR
           value: "normal"
         - name: PORT
