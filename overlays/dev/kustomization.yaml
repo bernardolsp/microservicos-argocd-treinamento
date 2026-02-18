@@ -33,4 +33,4 @@ commonAnnotations:
   managed-by: kargo
 images:
 - name: docker.io/devlopesbernardo/version-app
-  newTag: 1.2.3
+  newTag: 1.2.4
